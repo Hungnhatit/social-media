@@ -91,7 +91,7 @@ const Login = () => {
           <Link to="/reset-password" className="text-sm text-center py-5 text-blue font-semibold">Forgot Password?</Link>
 
           <p className="text-ascent-2 text-sm text-center">Don't have an account?
-            <Link to="/reset-password" className="text-sm text-right text-blue font-semibold"> Create an account</Link>
+            <Link to="/register" className="text-sm text-right text-blue font-semibold"> Create an account</Link>
           </p>
 
         </div>
