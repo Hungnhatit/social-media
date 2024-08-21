@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 //Hàm này dùng để kiểm tra người dùng đã đăng nhập hay chưa
 function Layout() {
   //  Biến này hiện được đặt là null, giả sử người dùng chưa đăng nhập. Nếu người dùng đã đăng nhập, biến này sẽ chứa thông tin người dùng, bao gồm token xác thực.
-  const user = useSelector(state => state.user);
+  const { user } = useSelector(state => state.user);
   console.log(user);
   const location = useLocation(); //Lấy thông tin về địa điểm hiện tại của người dùng
 
@@ -19,6 +19,7 @@ function Layout() {
 
 function App() {
   const { theme } = useSelector((state) => state.theme);
+
   return (
     <>
       <div data-theme={theme} className='w-full min-h-[100vh]'>
@@ -32,7 +33,6 @@ function App() {
           <Route path='/login' element={<Login />}></Route>
           <Route path='/register' element={<Register />}></Route>
           <Route path='/reset-password' element={<ResetPassword />}></Route>
-
         </Routes>
       </div>
     </>
