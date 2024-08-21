@@ -38,3 +38,9 @@ export function UserLogout() {
     dispatch(userSlice.actions.logout())
   };
 }
+
+export function UpdateProfile(val) {
+  return (dispatch, getState) => {
+    dispatch(userSlice.actions.updateProfile(val))
+  }
+}
