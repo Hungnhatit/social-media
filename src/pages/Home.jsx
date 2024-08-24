@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { ProfileCard, TopBar } from "../components";
+import { FriendCard, ProfileCard, TopBar } from "../components";
 
 
 export default function Home() {
