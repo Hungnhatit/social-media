@@ -3,9 +3,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom';
 import { NoProfile } from '../assets';
 import { LiaEditSolid } from 'react-icons/lia';
+import moment from 'moment';
 import { UpdateProfile } from '../redux/userSlice';
-import { BsBriefcase, BsPersonFillAdd } from 'react-icons/bs';
+import { BsBriefcase, BsFacebook, BsInstagram, BsPersonFillAdd } from 'react-icons/bs';
 import { CiLocationOn } from 'react-icons/ci';
+import { FaThreads } from 'react-icons/fa6';
 
 const ProfileCard = ({ user }) => {
   const { user: data, edit } = useSelector((state) => state.user);
@@ -70,7 +72,38 @@ const ProfileCard = ({ user }) => {
             <span className='text-ascent-2'>Who viewed your profile?</span>
             <span className='text-ascent-1 text-lg'>{user?.views?.length}</span>
           </div>
+
+          <span className='text-base text-blue'>
+            {user?.verified ? "Verified Account" : "Not Verified"}
+          </span>
+
+          <div className='flex items-center justify-between'>
+            <span className="text-ascent-2">Joined</span>
+            <span className="text-ascent-1 text-base">
+              {moment(user?.createdAt).fromNow()}
+            </span>
+          </div>
         </div>
+
+        {/*-----------< Liên kết mạng xã hội >-----------*/}
+        <div className='w-full flex flex-col gap-2 py-4 pb-6'>
+          <p className='text-ascent-1 text-lg font-semibold'>Social Profile</p>
+          <div className='flex gap-2 items-center text-ascent-2'>
+            <BsFacebook className='text-xl text-ascent-1'></BsFacebook>
+            <span>Facebook</span>
+          </div>
+          <div className="flex gap-2 items-center text-ascent-2">
+            <BsInstagram className='text-xl text-ascent-1'>
+            </BsInstagram>
+            <span>Instagram</span>
+          </div>
+          <div className="flex gap-2 items-center text-ascent-2">
+            <FaThreads className='text-xl text-ascent-1'>
+            </FaThreads>
+            <span>Thread</span>
+          </div>
+        </div>
+
 
 
       </div>
