@@ -6,8 +6,8 @@ const FriendCard = ({ friends }) => {
   return (
     <div>
       <div className='w-full bg-primary shadow-sm rounded-lg px-6 py-5'>
-        <div className="flex items-center justify-between text-ascent-1 pb-2">
-          <span>Friends</span>
+        <div className="flex items-center justify-between text-ascent-1 pb-2 border-b border-b-[#66666645]">
+          <span className='font-semibold'>Friends</span>
           <span>{friends.length}</span>
         </div>
 
@@ -30,8 +30,6 @@ const FriendCard = ({ friends }) => {
                   {friend?.profession ?? "No Profession"}
                 </span>
               </div>
-
-
             </Link>
           ))}
         </div>
