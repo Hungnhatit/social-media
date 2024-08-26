@@ -86,7 +86,7 @@ const ProfileCard = ({ user }) => {
         </div>
 
         {/*-----------< Liên kết mạng xã hội >-----------*/}
-        <div className='w-full flex flex-col gap-2 py-4 pb-6'>
+        <div className='w-full flex flex-col gap-2 pt-4'>
           <p className='text-ascent-1 text-lg font-semibold'>Social Profile</p>
           <div className='flex gap-2 items-center text-ascent-2'>
             <BsFacebook className='text-xl text-ascent-1'></BsFacebook>
