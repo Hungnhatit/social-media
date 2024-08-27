@@ -30,7 +30,7 @@ export default function Home() {
 
         {/* Center */}
         <div className="flex-1 h-full bg-primary px-4 flex flex-col gap-6 overflow-y-auto rounded-lg">
-          <form className="bg-primary px-4 rounded-lg">
+          <form onSubmit={handlePostSubmit(handlePostSubmit)} className="bg-primary px-4 rounded-lg">
             <div className="w-full flex items-center gap-4 py-4 border-b border-[#66666645]">
               <img
                 src={user?.profileUrl ?? NoProfile}
