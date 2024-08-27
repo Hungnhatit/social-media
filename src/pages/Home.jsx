@@ -1,15 +1,20 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { CustomButton, FriendCard, ProfileCard, TopBar } from "../components";
+import { CustomButton, FriendCard, ProfileCard, TextInput, TopBar } from "../components";
 import { requests, suggest } from "../assets/data";
 import { Link } from "react-router-dom";
 import { NoProfile } from "../assets";
 import { BsPersonFillAdd } from "react-icons/bs";
+import { useForm } from "react-hook-form";
 
 export default function Home() {
   const { user } = useSelector((state) => state.user);
   const [friendRequest, setFriendRequest] = useState(requests);
   const [suggestedFriends, setSuggestedFriends] = useState(suggest);
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const handlePostSubmit = async ({ data }) => {
+
+  }
 
   return (
     <div className="home w-full px-0 lg:px-10 pb-20 2xl:px-40 bg-bgColor lg:rounded-lg h-screen overflow-hidden">
@@ -24,7 +29,7 @@ export default function Home() {
 
 
         {/* Center */}
-        <div className="flex-1 h-full bg-primary px-4 flex flex-col gap-6 overflow-y-auto">
+        <div className="flex-1 h-full bg-primary px-4 flex flex-col gap-6 overflow-y-auto rounded-lg">
           <form className="bg-primary px-4 rounded-lg">
             <div className="w-full flex items-center gap-4 py-4 border-b border-[#66666645]">
               <img
@@ -32,6 +37,15 @@ export default function Home() {
                 alt="User Image"
                 className="w-14 h-14 rounded-full object-cover"
               />
+              <TextInput
+                styles="w-full rounded-full py-5"
+                placeholder="What's on your mind..."
+                name='description'
+                register={register("description", {
+                  required: "You have to write something on your post!"
+                })}
+                error={errors.description ? errors.description.message : ""}
+              ></TextInput>
             </div>
           </form>
 
