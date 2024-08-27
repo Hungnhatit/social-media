@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { NoProfile } from "../assets";
 import { BsPersonFillAdd } from "react-icons/bs";
 import { useForm } from "react-hook-form";
+import { BiImages } from "react-icons/bi";
 
 export default function Home() {
   const { user } = useSelector((state) => state.user);
@@ -66,15 +67,17 @@ export default function Home() {
                 htmlFor="imgUpload"
                 className="flex items-center gap-1 text-base text-ascent-2 hover:text-ascent-1 cursor-pointer"
               >
+                <input
+                  type="file"
+                  onChange={(e) => setFile(e.target.files[0])}
+                  className="hidden"
+                  id="imgUpload"
+                  data-max-size='5120'
+                  accept="jpg, png, jpeg"
+                />
+                <BiImages></BiImages>
+                <span>Image</span>
               </label>
-              <input
-                type="file"
-                onChange={(e) => setFile(e.target.files[0])}
-                className="hidden"
-                id="imgUpload"
-                data-max-size='5120'
-                accept="jpg, png, jpeg"
-              />
             </div>
 
           </form>
