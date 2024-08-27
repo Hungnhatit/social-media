@@ -62,7 +62,7 @@ export default function Home() {
               </span>
             )}
 
-            {/* Post Upload Section */}
+            {/* Post Upload */}
             <div className="flex items-center justify-between py-4">
               <label
                 htmlFor="imgUpload"
