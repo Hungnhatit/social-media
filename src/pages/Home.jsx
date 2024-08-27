@@ -12,7 +12,9 @@ export default function Home() {
   const [friendRequest, setFriendRequest] = useState(requests);
   const [suggestedFriends, setSuggestedFriends] = useState(suggest);
   const { register, handleSubmit, formState: { errors } } = useForm();
-  const handlePostSubmit = async ({ data }) => {
+  const [errMsg, setErrMsg] = useState("");
+  const [file, setFile] = useState(null)
+  const handlePostSubmit = async (data) => {
 
   }
 
@@ -47,6 +49,34 @@ export default function Home() {
                 error={errors.description ? errors.description.message : ""}
               ></TextInput>
             </div>
+            {errMsg?.message && (
+              <span
+                role="alert"
+                className={`text-sm ${errMsg?.status === "failed"
+                  ? "text-[#f64949fe]"
+                  : "text-[#2ba150fe]"
+                  } mt-0.5`}
+              >
+                {errMsg?.message}
+              </span>
+            )}
+
+            <div className="flex items-center justify-between py-4">
+              <label
+                htmlFor="imgUpload"
+                className="flex items-center gap-1 text-base text-ascent-2 hover:text-ascent-1 cursor-pointer"
+              >
+              </label>
+              <input
+                type="file"
+                onChange={(e) => setFile(e.target.files[0])}
+                className="hidden"
+                id="imgUpload"
+                data-max-size='5120'
+                accept="jpg, png, jpeg"
+              />
+            </div>
+
           </form>
 
 
