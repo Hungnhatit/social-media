@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { CustomButton, FriendCard, ProfileCard, TextInput, TopBar } from "../components";
+import { CustomButton, FriendCard, Loading, ProfileCard, TextInput, TopBar } from "../components";
 import { requests, suggest } from "../assets/data";
 import { Link } from "react-router-dom";
 import { NoProfile } from "../assets";
-import { BsPersonFillAdd } from "react-icons/bs";
+import { BsFiletypeGif, BsPersonFillAdd } from "react-icons/bs";
 import { useForm } from "react-hook-form";
-import { BiImages } from "react-icons/bi";
+import { BiImages, BiSolidVideo } from "react-icons/bi";
 
 export default function Home() {
   const { user } = useSelector((state) => state.user);
@@ -14,7 +14,10 @@ export default function Home() {
   const [suggestedFriends, setSuggestedFriends] = useState(suggest);
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [errMsg, setErrMsg] = useState("");
-  const [file, setFile] = useState(null)
+  const [file, setFile] = useState(null);
+  const [posting, setPosting] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const handlePostSubmit = async (data) => {
 
   }
@@ -33,7 +36,7 @@ export default function Home() {
 
         {/* Center */}
         <div className="flex-1 h-full bg-primary px-4 flex flex-col gap-6 overflow-y-auto rounded-lg">
-          <form onSubmit={handlePostSubmit(handlePostSubmit)} className="bg-primary px-4 rounded-lg">
+          <form onSubmit={handleSubmit(handlePostSubmit)} className="bg-primary px-4 rounded-lg">
             <div className="w-full flex items-center gap-4 py-4 border-b border-[#66666645]">
               <img
                 src={user?.profileUrl ?? NoProfile}
@@ -79,6 +82,53 @@ export default function Home() {
                 <BiImages></BiImages>
                 <span>Image</span>
               </label>
+
+              <label
+                className="flex items-center gap-1 text-base text-ascent-2 hover:test-ascent-1 cursor-pointer"
+                htmlFor="videoUpload"
+              >
+                <input
+                  type="file"
+                  data-max-size='5120'
+                  onChange={(e) => setFile(e.target.files[0])}
+                  className="hidden"
+                  id='videoUpload'
+                  accept='.mp4'
+                />
+                <BiSolidVideo></BiSolidVideo>
+                <span>Video</span>
+              </label>
+
+              <label
+                className="flex items-center gap-1 text-base text-ascent-2 hover:text-ascent-1 cursor-pointer"
+                htmlFor="gifUpload">
+                <input
+                  type="file"
+                  data-max-size='5120'
+                  onChange={(e) => setFile(e.target.files[0])}
+                  className="hidden"
+                  id='gifUpload'
+                  accept='.gif'
+                />
+                <BsFiletypeGif></BsFiletypeGif>
+                <span>GIF</span>
+              </label>
+
+              <div>
+                {
+                  posting ? (
+                    <Loading />
+                  ) : (
+                    <CustomButton
+                      type='submit'
+                      title="Post"
+                      containerStyles="bg-[#0444a4] text-white py-1 px-6 rounded-full font-semibold text-sm"
+                    ></CustomButton>
+                  )
+                }
+
+              </div>
+
             </div>
 
           </form>
