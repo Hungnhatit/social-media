@@ -5,4 +5,5 @@ import CustomButton from "./CustomButton";
 import TopBar from "./TopBar";
 import ProfileCard from "./ProfileCard";
 import FriendCard from "./FriendCard";
-export { TextInput, Loading, CustomButton, TopBar, ProfileCard, FriendCard }
+import PostCard from "./PostCard";
+export { TextInput, Loading, CustomButton, TopBar, ProfileCard, FriendCard, PostCard}

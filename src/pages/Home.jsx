@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { CustomButton, FriendCard, Loading, ProfileCard, TextInput, TopBar } from "../components";
-import { requests, suggest } from "../assets/data";
+import { CustomButton, FriendCard, Loading, PostCard, ProfileCard, TextInput, TopBar } from "../components";
+import { requests, suggest, posts } from "../assets/data";
 import { Link } from "react-router-dom";
 import { NoProfile } from "../assets";
 import { BsFiletypeGif, BsPersonFillAdd } from "react-icons/bs";
@@ -23,12 +23,12 @@ export default function Home() {
   }
 
   return (
-    <div className="home w-full px-0 lg:px-10 pb-20 2xl:px-40 bg-bgColor lg:rounded-lg h-screen overflow-hidden">
+    <div className="home w-full px-0 lg:px-10 pb-1 2xl:px-10 bg-bgColor lg:rounded-lg h-screen overflow-auto">
       <TopBar></TopBar>
 
-      <div className="w-full flex gap-2 lg:gap-4 pt-5 pb-10 h-full">
+      <div className="w-full flex gap-2 lg:gap-4 pt-5 pb-1 h-full">
         {/* Left */}
-        <div className="hidden w-1/3 lg:w-1/4 h-full md:flex flex-col gap-6 overflow-y-auto">
+        <div className="hidden w-1/5  h-full md:flex flex-col gap-6 overflow-y-auto">
           <ProfileCard user={user}></ProfileCard>
           <FriendCard friends={user?.friends}></FriendCard>
         </div>
@@ -133,7 +133,22 @@ export default function Home() {
 
           </form>
 
-
+          {/* Post Container */}
+          {loading ? (<Loading />) : posts?.length > 0 ? (
+            posts?.map((post) => (
+              <PostCard
+                key={post._id}
+                post={post}
+                user={user}
+                deletePost={() => { }}
+                likePost={() => { }}
+              ></PostCard>
+            ))
+          ) : (
+            <div className="flex w-full h-full items-center justify-center">
+              <p className="text-lg text-ascent-2">No post available</p>
+            </div>
+          )}
 
 
 
@@ -141,7 +156,7 @@ export default function Home() {
 
 
         {/* Right */}
-        <div className="hidden w-1/4 h-full lg:flex flex-col gap-8 overflow-y-auto">
+        <div className="hidden w-1/5 h-full lg:flex flex-col gap-8 overflow-y-auto">
           {/* Friend Request */}
           <div className="w-full bg-primary shadow-sm rounded-lg px-6 py-5 ">
             <div className="flex items-center justify-between text-xl text-ascent-1 pb-2 border-b border-[#66666645]">
