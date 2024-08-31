@@ -145,6 +145,7 @@ export const suggest = [
     ...friends[2],
   },
 ];
+
 export const posts = [
   {
     _id: "64e2fe620d7868ecff1a6a86",
