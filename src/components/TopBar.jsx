@@ -50,7 +50,7 @@ const TopBar = () => {
       >
         <TextInput
           placeholder="Search"
-          styles='w-[18rem] lg:w-[38rem] rounded-l-full py-3'
+          styles='w-[18rem] lg:w-[38rem] rounded-l-full py-3 mt-2'
           register={register('search')}
         ></TextInput>
         <CustomButton
