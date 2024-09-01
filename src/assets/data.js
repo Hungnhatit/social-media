@@ -1,9 +1,8 @@
 export const user = {
   _id: "64df3c064180b81adfe41d4b",
-  firstName: "Hungnhatit",
-  lastName: "",
+  firstName: "Code",
+  lastName: "Wave",
   email: "codewavewithasante@gmail.com",
-  profession: "Backend Developer",
   friends: [
     {
       _id: "64df3aec4180b81adfe41d32",
@@ -145,7 +144,6 @@ export const suggest = [
     ...friends[2],
   },
 ];
-
 export const posts = [
   {
     _id: "64e2fe620d7868ecff1a6a86",
@@ -205,8 +203,8 @@ export const posts = [
     _id: "64df43714a4c0d47b5369fef",
     userId: {
       _id: "64df3c064180b81adfe41d4b",
-      firstName: "Hungnhatit",
-      lastName: "",
+      firstName: "Code",
+      lastName: "Wave",
       profileUrl:
         "https://res.cloudinary.com/djs3wu5bg/image/upload/v1683874454/samples/people/boy-snow-hoodie.jpg",
     },
