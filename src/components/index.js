@@ -6,4 +6,14 @@ import TopBar from "./TopBar";
 import ProfileCard from "./ProfileCard";
 import FriendCard from "./FriendCard";
 import PostCard from "./PostCard";
-export { TextInput, Loading, CustomButton, TopBar, ProfileCard, FriendCard, PostCard}
+import EditProfile from "./EditProfile";
+export {
+  TextInput,
+  Loading,
+  CustomButton,
+  TopBar,
+  ProfileCard,
+  FriendCard,
+  PostCard,
+  EditProfile
+}
