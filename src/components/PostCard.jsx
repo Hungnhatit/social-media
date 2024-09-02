@@ -10,6 +10,8 @@ import { useForm } from 'react-hook-form';
 import { Loading, TextInput } from '../components';
 import { FaCircleArrowUp } from 'react-icons/fa6';
 import { postComments } from '../assets/data';
+import { BsDot } from 'react-icons/bs';
+import { RxDotFilled } from 'react-icons/rx';
 
 // Comment form
 const CommentForm = ({ user, id, replyAt, getComments }) => {
@@ -27,7 +29,7 @@ const CommentForm = ({ user, id, replyAt, getComments }) => {
 
   return (
     <form
-      className='w-full border-b border-[#66666645]'
+      className='w-full border-[#66666645]'
       onSubmit={handleSubmit(onSubmit)}>
       <div className='w-full flex items-center gap-2 py-4'>
         <img
@@ -197,7 +199,7 @@ const PostCard = ({ post, user, deletePost, likePost }) => {
         }
       </div>
 
-      <div className='mt-4 px-3 py-4 text-ascent-2 text-base border-t border-[#66666645]'>
+      <div className='mt-4 px-3 py-4 text-ascent-2 text-base border-[#66666645]'>
         {/* Reaction Overview */}
         <div className=''>
           <p className='flex gap-1 items-center text-base cursor-pointer'>
@@ -224,7 +226,7 @@ const PostCard = ({ post, user, deletePost, likePost }) => {
         </div>
 
         {/* Action */}
-        <div className='mt-4 flex justify-between items-center px-3 py-4 text-ascent-2 text-base border-t border-[#66666645]'>
+        <div className='mt-4 flex justify-between items-center px-3 py-2 text-ascent-2 text-base border-y border-[#66666645]'>
           <div className='flex items-center cursor-pointer'>
             <BiSolidLike size={20} color="#0766FF" className='mr-2' />
             <span>Liked</span>
@@ -260,7 +262,7 @@ const PostCard = ({ post, user, deletePost, likePost }) => {
       {/* Comment Section */}
       {
         showComments === post?._id && (
-          <div className='w-full mt-4 border-t border-[#66666645] pt-4'>
+          <div className='w-full border-[#66666645]'>
             <CommentForm
               user={user}
               id={post?._id}
@@ -271,88 +273,97 @@ const PostCard = ({ post, user, deletePost, likePost }) => {
               (<Loading />) : comments?.length > 0 ? (
                 comments?.map((comment) => (
                   //  Comment Container
-                  <div className='w-full py-2' key={comment?._id}>
-                    <div className='flex gap-3 items-center mb-1'>
+                  <div className='w-full flex pt-2 pb-4' key={comment?._id}>
+
+                    <div className="user-avatar">
                       <Link to={"/profile/" + comment?.userId?._id}>
                         <img
                           src={comment?.userId?.profileUrl ?? NoProfile}
                           alt={comment?.userId?.firstName}
-                          className="h-10 w-10 roundeful object-cover"
+                          className="h-10 w-10 rounded-full object-cover"
                         />
                       </Link>
+                    </div>
+
+                    <div className="user-comment-content ml-6">
+                      <div className='flex gap-3 items-center mb-1'>
+                        <div className='flex items-center'>
+                          <Link to={"/profile/" + comment?.userId?._id}>
+                            <p className='font-medium text-base text-ascent'>
+                              {comment?.userId?.firstName} {comment?.userId?.lastName}
+                            </p>
+                          </Link>
+                          <span className='mx-1'>
+                          <RxDotFilled />
+                          </span>
+                          <span className='text-ascent-2 text-sm'>
+                            {moment(comment?.createdAt ?? "2024-9-01").fromNow()}
+                          </span>
+                        </div>
+                      </div>
+
                       <div className=''>
-                        <Link to={"/profile/" + comment?.userId?._id}>
-                          <p className='font-medium text-base text-ascent'>
-                            {comment?.userId?.firstName} {comment?.userId?.lastName}
+                        <p className='text-ascent-2'>{comment?.comment}</p>
+
+                        <div className='flex mt-2 gap-6'>
+                          <p className='flex gap-2 items-center text-base text-ascent-2 cursor-pointer'>
+                            {""}
+                            {comment?.likes.includes(user?._id) ? (
+                              <BiSolidLike size={20} color="blue"></BiSolidLike>
+                            ) : (<BiSolidLike size={20}></BiSolidLike>)}
+                            {comments?.likes?.length}Likes
                           </p>
-                        </Link>
-                        <span className='text-ascent-2 text-sm'>
-                          {moment(comment?.createdAt ?? "2024-9-01").fromNow()}
-                        </span>
-                      </div>
-                    </div>
+                          <span
+                            className='text-blue cursor-pointer'
+                            onClick={() => setReplyComments(comment?._id)}>
+                            Reply
+                          </span>
+                        </div>
 
-                    <div className='ml-12'>
-                      <p className='text-ascent-2'>{comment?.comment}</p>
-
-                      <div className='flex mt-2 gap-6'>
-                        <p className='flex gap-2 items-center text-base text-ascent-2 cursor-pointer'>
-                          {""}
-                          {comment?.likes.includes(user?._id) ? (
-                            <BiSolidLike size={20} color="blue"></BiSolidLike>
-                          ) : (<BiSolidLike size={20}></BiSolidLike>)}
-                          {comments?.likes?.length}Likes
-                        </p>
-                        <span
-                          className='text-blue cursor-pointer'
-                          onClick={() => setReplyComments(comment?._id)}>
-                          Reply
-                        </span>
-                      </div>
-
-                      {replyComments === comment?._id && (
-                        <CommentForm
-                          user={user}
-                          id={comment?._id}
-                          replyAt={comment?.from}
-                          getComments={() => getComments(post?._id)}
-                        />
-                      )}
-
-                    </div>
-
-                    {/* Reply comments */}
-                    <div className='py-2 px-8 mt-6'>
-                      {comment?.replies.length > 0 && (
-                        <p
-                          className='text-base text-ascent-2 cursor-pointer'
-                          onClick={() => {
-                            setShowReply(
-                              showReply === comment?.replies?._id
-                                ? 0
-                                : comment?.replies?._id
-                            )
-                          }}
-                        >
-                          View more comments
-                        </p>
-                      )}
-
-                      {showReply === comment?.replies._id && (
-                        comment?.replies?.map((reply) => (
-                          <ReplyCard
-                            reply={reply}
+                        {replyComments === comment?._id && (
+                          <CommentForm
                             user={user}
-                            key={reply?._id}
-                            handleLike={() =>
-                              "/posts/like-comment/"
-                              + comment?._id
-                              + "/"
-                              + reply?._id
-                            }
-                          ></ReplyCard>
-                        ))
-                      )}
+                            id={comment?._id}
+                            replyAt={comment?.from}
+                            getComments={() => getComments(post?._id)}
+                          />
+                        )}
+
+                      </div>
+
+                      {/* Reply comments - Show more comments*/}
+                      <div>
+                        {comment?.replies.length > 0 && (
+                          <p
+                            className='text-base text-ascent-2 cursor-pointer mt-4'
+                            onClick={() => {
+                              setShowReply(
+                                showReply === comment?.replies?._id
+                                  ? 0
+                                  : comment?.replies?._id
+                              )
+                            }}
+                          >
+                            View more comments
+                          </p>
+                        )}
+
+                        {showReply === comment?.replies._id && (
+                          comment?.replies?.map((reply) => (
+                            <ReplyCard
+                              reply={reply}
+                              user={user}
+                              key={reply?._id}
+                              handleLike={() =>
+                                "/posts/like-comment/"
+                                + comment?._id
+                                + "/"
+                                + reply?._id
+                              }
+                            ></ReplyCard>
+                          ))
+                        )}
+                      </div>
                     </div>
 
 
