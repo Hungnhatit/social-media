@@ -1,26 +1,89 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { CustomButton, EditProfile, FriendCard, Loading, PostCard, ProfileCard, TextInput, TopBar } from "../components";
-import { requests, suggest, posts } from "../assets/data";
+import { requests, suggest } from "../assets/data";
 import { Link } from "react-router-dom";
 import { NoProfile } from "../assets";
 import { BsFiletypeGif, BsPersonFillAdd } from "react-icons/bs";
 import { useForm } from "react-hook-form";
 import { BiImages, BiSolidVideo } from "react-icons/bi";
+import { apiRequest, fetchPosts, handleFileUpload } from "../utils";
 
 export default function Home() {
   const { user, edit } = useSelector((state) => state.user);
+  const { posts } = useSelector((state) => state.posts);
   const [friendRequest, setFriendRequest] = useState(requests);
   const [suggestedFriends, setSuggestedFriends] = useState(suggest);
-  const { register, handleSubmit, formState: { errors } } = useForm();
   const [errMsg, setErrMsg] = useState("");
   const [file, setFile] = useState(null);
   const [posting, setPosting] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handlePostSubmit = async (data) => {
+  const dispatch = useDispatch();
 
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors }
+  } = useForm();
+
+  const handlePostSubmit = async (data) => {
+    setPosting(true);
+    setErrMsg("");
+    try {
+      const uri = file && (await handleFileUpload(file));
+      const newData = uri ? { ...data, image: uri } : data;
+      const res = await apiRequest({
+        url: "/posts/create-post",
+        data: newData,
+        token: user?.token,
+        method: "POST"
+      });
+
+      if (res?.status === "failed") {
+        setErrMsg(res);
+      } else {
+        reset({
+          description: "",
+        });
+        setFile(null);
+        setErrMsg("");
+        await fetchPost();
+      };
+      setPosting(false);
+    } catch (error) {
+      console.log(error);
+      setPosting(false);
+    }
   }
+
+  const fetchPost = async () => {
+    await fetchPosts(user?.token, dispatch);
+    setLoading(false);
+  }
+
+  const handleLikePost = async () => { }
+
+  const handleDelete = async () => { }
+
+  const fetchFriendRequest = async () => { }
+
+  const fetchSuggestedFriends = async () => { }
+
+  const handleFriendRequests = async () => { }
+
+  const acceptRequest = async () => { }
+
+  const getUser = async () => { }
+
+  useEffect(() => {
+    setLoading(true);
+    getUser();
+    fetchPost();
+    fetchFriendRequest();
+    fetchSuggestedFriends();
+  })
 
   return (
     <>
@@ -33,7 +96,6 @@ export default function Home() {
             <ProfileCard user={user}></ProfileCard>
             <FriendCard friends={user?.friends}></FriendCard>
           </div>
-
 
           {/* Center */}
           <div className="flex-1 h-full px-4 flex flex-col gap-6 overflow-y-auto rounded-lg">
@@ -150,9 +212,6 @@ export default function Home() {
                 <p className="text-lg text-ascent-2">No post available</p>
               </div>
             )}
-
-
-
           </div>
 
 
