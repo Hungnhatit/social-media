@@ -8,9 +8,14 @@ import { BgImage } from "../assets";
 import { BsShare } from "react-icons/bs";
 import { ImConnection } from "react-icons/im";
 import { AiOutlineInteraction } from "react-icons/ai";
+import { apiRequest } from "../utils/index.js";
 
 
 const Register = () => {
+  const [errMsg, setErrMsg] = useState("");
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const dispatch = useDispatch();
+
   const {
     register, handleSubmit, getValues, formState: { errors }
   } = useForm(
@@ -18,12 +23,29 @@ const Register = () => {
   );
 
   const onSubmit = async (data) => {
+    setIsSubmitted(true);
+    try {
+      const res = await apiRequest({
+        url: "/auth/register",
+        data: data,
+        method: "POST"
+      });
+      console.log(res.status);
 
+      if (res?.status === undefined) {
+        setErrMsg(res);
+      } else {
+        setErrMsg(res);
+        setTimeout(() => {
+          window.location.replace("/login");
+        }, 5000);
+      }
+      setIsSubmitted(false);
+    } catch (error) {
+      console.log(error);
+      setIsSubmitted(false);
+    }
   }
-
-  const [errMsg, setErrMsg] = useState("");
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const dispatch = useDispatch();
 
   return (
     <div className="bg-bgColor w-full h-[100vh] flex items-center justify-center p-6">
@@ -65,7 +87,7 @@ const Register = () => {
                 register={register("lastName", {
                   required: "Last name is required!",
                 })}
-                error={errors.firstName ? errors.firstName?.message : ""}>
+                error={errors.firstName ? errors.lastName?.message : ""}>
               </TextInput>
             </div>
 

@@ -8,8 +8,14 @@ import { BgImage } from "../assets";
 import { BsShare } from "react-icons/bs";
 import { ImConnection } from "react-icons/im";
 import { AiOutlineInteraction } from "react-icons/ai";
+import { apiRequest } from "../utils";
+import { UserLogin } from "../redux/userSlice.js";
 
 const Login = () => {
+  const [errMsg, setErrMsg] = useState("");
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const dispatch = useDispatch();
+
   const {
     register, handleSubmit, formState: { errors }
   } = useForm(
@@ -17,12 +23,27 @@ const Login = () => {
   );
 
   const onSubmit = async (data) => {
+    setIsSubmitted(true);
+    try {
+      const res = await apiRequest({
+        url: "/auth/login",
+        data: data,
+        method: "POST",
+      });
+      if (res?.status === "failed") {
+        setErrMsg(res);
+      } else {
+        setErrMsg("");
+        const newData = { token: res?.token, ...res?.user };
+        dispatch(UserLogin(newData));
+        window.location.replace("/");
+      }
+    } catch (error) {
+      console.log(error);
 
+    }
   }
 
-  const [errMsg, setErrMsg] = useState("");
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const dispatch = useDispatch();
 
   return (
     <div className="bg-bgColor w-full h-[100vh] flex items-center justify-center p-6">
