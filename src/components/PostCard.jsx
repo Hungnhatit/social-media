@@ -138,8 +138,6 @@ const PostCard = ({ post, user, deletePost, likePost }) => {
 
   }
 
-  console.log(comments);
-
   return (
     <div className='mb-2 bg-primary p-4 shadown-sm border-b border-[#cccccc] rounded-lg'>
       <div className="flex gap-3 items-center mb-2">
