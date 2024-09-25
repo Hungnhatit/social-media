@@ -7,11 +7,25 @@ import { GoCommentDiscussion, GoShareAndroid } from 'react-icons/go';
 import { MdOutlineDeleteOutline } from 'react-icons/md';
 import { FcLike } from 'react-icons/fc';
 import { get, useForm } from 'react-hook-form';
-import { Loading, TextInput } from '../components';
+import { CustomButton, Loading, TextInput } from '../components';
 import { FaCircleArrowUp } from 'react-icons/fa6';
 import { postComments } from '../assets/data';
 import { BsDot } from 'react-icons/bs';
 import { RxDotFilled } from 'react-icons/rx';
+import { apiRequest } from '../utils';
+
+const getPostComments = async (id) => {
+  try {
+    const res = await apiRequest({
+      url: "/posts/comments/" + id,
+      method: "GET",
+    });
+    return res?.data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 
 // Comment form
 const CommentForm = ({ user, id, replyAt, getComments }) => {
@@ -25,7 +39,43 @@ const CommentForm = ({ user, id, replyAt, getComments }) => {
       mode: "onChange"
     });
 
-  const onSubmit = async (data) => { };
+  const onSubmit = async (data) => {
+    setLoading(true);
+    setErrMsg("");
+    try {
+      const URL = !replyAt
+        ? "/posts/comment/" + id
+        : "/posts/reply-comment" + id;
+
+      const newData = {
+        comment: data?.comment,
+        from: user?.firstName + " " + user?.lastName,
+        replyAt: replyAt,
+      };
+
+      const res = await apiRequest({
+        url: URL,
+        data: newData,
+        token: user?.token,
+        method: "POST",
+      });
+
+      if (res.status === "failed") {
+        setErrMsg(res);
+      } else {
+        reset({
+          comment: "",
+        });
+        setErrMsg("");
+        await getComments();
+      };
+      setLoading(false);
+
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
 
   return (
     <form
@@ -51,7 +101,13 @@ const CommentForm = ({ user, id, replyAt, getComments }) => {
           {loading ? (
             <Loading />
           ) : (
-            <FaCircleArrowUp className='cursor-pointer' size={28} color="#0766FF" />
+            <CustomButton
+              title="Submit"
+              type="submit"
+              containerStyles='bg-[#0444a4] text-white py-1 px-3 rounded-full font-semibold text-sm'
+            >
+              {/* <FaCircleArrowUp className='cursor-pointer' size={28} color="#0766FF" /> */}
+            </CustomButton>
           )}
         </div>
       </div>
@@ -112,12 +168,9 @@ const ReplyCard = ({ reply, user, handleLike }) => {
           </p>
         </div>
       </div>
-
-
     </div>
   )
 }
-
 
 // ----------<  Post Container  >----------
 const PostCard = ({ post, user, deletePost, likePost }) => {
@@ -128,9 +181,10 @@ const PostCard = ({ post, user, deletePost, likePost }) => {
   const [replyComments, setReplyComments] = useState(0);
   const [showComments, setShowComments] = useState(0);
 
-  const getComments = async () => {
+  const getComments = async (id) => {
     setReplyComments(0);
-    setComments(postComments);
+    const result = await getPostComments(id);
+    setComments(result);
     setLoading(false);
   }
 
@@ -246,7 +300,8 @@ const PostCard = ({ post, user, deletePost, likePost }) => {
             onClick={() => {
               setShowComments(showComments === post._id ? null : post._id);
               getComments(post?._id);
-            }}>
+            }}
+          >
             <GoCommentDiscussion size={20} />
             {post?.comments?.length} comments
           </p>
