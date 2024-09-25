@@ -2,12 +2,13 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { NoProfile } from '../assets'
 
-const FriendCard = ({ friends }) => {
+const FriendCard = ({ friends, user }) => {
   return (
     <div>
       <div className='w-full bg-primary shadow-sm rounded-lg px-6 py-5'>
         <div className="flex items-center justify-between text-ascent-1 pb-2 border-b border-b-[#66666645]">
-          <span className='font-semibold'>Friends</span>
+          <Link to={"/friends/" + user?._id}>Friends</Link>
+          {/* <span className='font-semibold'>Friends</span> */}
           <span>{friends?.length}</span>
         </div>
 

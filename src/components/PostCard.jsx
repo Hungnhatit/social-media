@@ -6,7 +6,7 @@ import { BiLike, BiSolidLike } from 'react-icons/bi';
 import { GoCommentDiscussion, GoShareAndroid } from 'react-icons/go';
 import { MdOutlineDeleteOutline } from 'react-icons/md';
 import { FcLike } from 'react-icons/fc';
-import { useForm } from 'react-hook-form';
+import { get, useForm } from 'react-hook-form';
 import { Loading, TextInput } from '../components';
 import { FaCircleArrowUp } from 'react-icons/fa6';
 import { postComments } from '../assets/data';
@@ -134,8 +134,9 @@ const PostCard = ({ post, user, deletePost, likePost }) => {
     setLoading(false);
   }
 
-  const handleLike = async () => {
-
+  const handleLike = async (uri) => {
+    await likePost(uri);
+    await getComments(post?._id);
   }
 
   return (
@@ -167,7 +168,7 @@ const PostCard = ({ post, user, deletePost, likePost }) => {
 
       <div>
         {/* Content */}
-        <p className="text-ascent-2">
+        <p className="text-[#161616] text-base ">
           {showAll === post?._id
             ? post?.description
             : post?.description.slice(0, 300)}
@@ -225,9 +226,19 @@ const PostCard = ({ post, user, deletePost, likePost }) => {
 
         {/* Action */}
         <div className='mt-4 flex justify-between items-center px-3 py-2 text-ascent-2 text-base border-y border-[#66666645]'>
-          <div className='flex items-center cursor-pointer'>
-            <BiSolidLike size={20} color="#0766FF" className='mr-2' />
-            <span>Liked</span>
+          <div
+            className='flex items-center cursor-pointer'
+            onClick={() => handleLike("/posts/like/" + post?._id)}
+          >
+            {/* <BiSolidLike size={20} color="#0766FF" className='mr-2' />
+            <span>Liked</span> */}
+            {post?.likes?.includes(user?._id) ? (
+              <BiSolidLike size={20} color='blue' />
+            ) : (
+              <BiLike size={20} />
+            )}
+            {post?.likes?.length} Likes
+
           </div>
 
           <p
@@ -292,7 +303,7 @@ const PostCard = ({ post, user, deletePost, likePost }) => {
                             </p>
                           </Link>
                           <span className='mx-1'>
-                          <RxDotFilled />
+                            <RxDotFilled />
                           </span>
                           <span className='text-ascent-2 text-sm'>
                             {moment(comment?.createdAt ?? "2024-9-01").fromNow()}

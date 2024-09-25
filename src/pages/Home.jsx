@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CustomButton, EditProfile, FriendCard, Loading, PostCard, ProfileCard, TextInput, TopBar } from "../components";
-import { requests, suggest } from "../assets/data";
 import { Link } from "react-router-dom";
 import { NoProfile } from "../assets";
 import { BsFiletypeGif, BsPersonFillAdd } from "react-icons/bs";
 import { useForm } from "react-hook-form";
 import { BiImages, BiSolidVideo } from "react-icons/bi";
-import { apiRequest, fetchPosts, handleFileUpload } from "../utils";
+import { apiRequest, deletePost, fetchPosts, handleFileUpload, likePost } from "../utils";
+import { requests } from "../assets/data.js";
 
 export default function Home() {
   const { user, edit } = useSelector((state) => state.user);
   const { posts } = useSelector((state) => state.posts);
-  const [friendRequest, setFriendRequest] = useState(requests);
-  const [suggestedFriends, setSuggestedFriends] = useState(suggest);
+  const [friendRequest, setFriendRequest] = useState([]);
+  const [suggestedFriends, setSuggestedFriends] = useState([]);
   const [errMsg, setErrMsg] = useState("");
   const [file, setFile] = useState(null);
   const [posting, setPosting] = useState(false);
@@ -58,20 +58,51 @@ export default function Home() {
     }
   }
 
+
   const fetchPost = async () => {
     await fetchPosts(user?.token, dispatch);
     setLoading(false);
   }
 
-  const handleLikePost = async () => { }
+  const handleLikePost = async (uri) => {
+    await likePost({ uri: uri, token: user?.token });
+    await fetchPost();
+  }
 
-  const handleDelete = async () => { }
+  const handleDelete = async (id) => {
+    await deletePost(id, user.token);
+    await fetchPost();
+  }
 
-  const fetchFriendRequest = async () => { }
+  const fetchFriendRequest = async () => {
+    try {
+      const res = await apiRequest({
+        url: "/users/get-friend-request",
+        token: user?.token,
+        method: "POST"
+      });
+      setFriendRequest(res?.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
-  const fetchSuggestedFriends = async () => { }
+  const fetchSuggestedFriends = async () => {
+    try {
+      const res = await apiRequest({
+        url: "/users/suggested-friends",
+        token: user?.token,
+        method: "POST"
+      });
+      setSuggestedFriends(res?.data);
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
-  const handleFriendRequests = async () => { }
+  const handleFriendRequests = async () => {
+
+  }
 
   const acceptRequest = async () => { }
 
@@ -83,7 +114,7 @@ export default function Home() {
     fetchPost();
     fetchFriendRequest();
     fetchSuggestedFriends();
-  })
+  }, [])
 
   return (
     <>
@@ -94,7 +125,7 @@ export default function Home() {
           {/* Left */}
           <div className="hidden w-1/5  h-full md:flex flex-col gap-6 overflow-y-auto">
             <ProfileCard user={user}></ProfileCard>
-            <FriendCard friends={user?.friends}></FriendCard>
+            <FriendCard friends={user?.friends} user={user}></FriendCard>
           </div>
 
           {/* Center */}
@@ -104,10 +135,10 @@ export default function Home() {
                 <img
                   src={user?.profileUrl ?? NoProfile}
                   alt="User Image"
-                  className="w-14 h-14 rounded-full object-cover"
+                  className="w-12 h-12 rounded-full object-cover"
                 />
                 <TextInput
-                  styles="w-full rounded-full py-5"
+                  styles="w-full rounded-full"
                   placeholder="What's on your mind..."
                   name='description'
                   register={register("description", {
@@ -189,22 +220,19 @@ export default function Home() {
                       ></CustomButton>
                     )
                   }
-
                 </div>
-
               </div>
-
             </form>
 
             {/* Post Container */}
             {loading ? (<Loading />) : posts?.length > 0 ? (
               posts?.map((post) => (
                 <PostCard
-                  key={post._id}
+                  key={post?._id}
                   post={post}
                   user={user}
-                  deletePost={() => { }}
-                  likePost={() => { }}
+                  deletePost={handleDelete}
+                  likePost={handleLikePost}
                 ></PostCard>
               ))
             ) : (
@@ -213,7 +241,6 @@ export default function Home() {
               </div>
             )}
           </div>
-
 
           {/* Right */}
           <div className="hidden w-1/5 h-full lg:flex flex-col gap-8 overflow-y-auto">
@@ -258,18 +285,10 @@ export default function Home() {
                         containerStyles='w-1/2 justify-center border border-[#666] text-sm text-ascent-1 px-1.5 py-1.5 rounded-2xl'
                       ></CustomButton>
                     </div>
-
-
-
                   </div>
                 ))}
               </div>
-
             </div>
-
-
-
-
 
             {/* Suggested Friend */}
             <div>

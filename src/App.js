@@ -19,7 +19,7 @@ function Layout() {
 
 function App() {
   const { theme } = useSelector((state) => state.theme);
-
+  const { user } = useSelector((state) => state.user)
   return (
     <>
       <div data-theme={theme} className='w-full min-h-[100vh]'>
