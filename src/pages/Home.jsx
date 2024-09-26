@@ -6,8 +6,9 @@ import { NoProfile } from "../assets";
 import { BsFiletypeGif, BsPersonFillAdd } from "react-icons/bs";
 import { useForm } from "react-hook-form";
 import { BiImages, BiSolidVideo } from "react-icons/bi";
-import { apiRequest, deletePost, fetchPosts, handleFileUpload, likePost } from "../utils";
+import { apiRequest, deletePost, fetchPosts, getUserInfo, handleFileUpload, likePost, sendFriendRequest } from "../utils";
 import { requests } from "../assets/data.js";
+import { UserLogin } from "../redux/userSlice.js";
 
 export default function Home() {
   const { user, edit } = useSelector((state) => state.user);
@@ -100,13 +101,38 @@ export default function Home() {
     }
   }
 
-  const handleFriendRequests = async () => {
-
+  const handleFriendRequest = async (id) => {
+    try {
+      const res = await sendFriendRequest(user.token, id);
+      await fetchSuggestedFriends();
+    } catch (error) {
+      console.log(error);
+    }
+    console.log(user.token);
   }
 
-  const acceptRequest = async () => { }
+  const acceptRequest = async (id, status) => {
+    try {
+      const res = await apiRequest({
+        url: "/users/accept-request",
+        token: user?.token,
+        method: "POST",
+        data: { rid: id, status },
+      });
+      setFriendRequest(res?.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
-  const getUser = async () => { }
+  const getUser = async () => {
+    const res = await getUserInfo(user?.token);
+    const newData = { token: user?.token, ...res };
+    dispatch(UserLogin(newData));
+    console.log(newData);
+  }
+
+
 
   useEffect(() => {
     setLoading(true);
@@ -118,12 +144,12 @@ export default function Home() {
 
   return (
     <>
-      <div className="home w-full px-0 lg:px-10 pb-1 2xl:px-10 bg-bgColor lg:rounded-lg h-screen overflow-auto">
+      <div className="home w-full pb-1 bg-bgColor lg:rounded-lg h-screen overflow-auto">
         <TopBar></TopBar>
 
-        <div className="w-full flex gap-2 lg:gap-4 pt-5 pb-1 h-full">
+        <div className="w-full lg:px-10 flex gap-2 lg:gap-4 pt-5 pb-1 h-full">
           {/* Left */}
-          <div className="hidden w-1/5  h-full md:flex flex-col gap-6 overflow-y-auto">
+          <div className="hidden w-1/4  h-full md:flex flex-col gap-6 overflow-y-auto">
             <ProfileCard user={user}></ProfileCard>
             <FriendCard friends={user?.friends} user={user}></FriendCard>
           </div>
@@ -233,7 +259,9 @@ export default function Home() {
                   user={user}
                   deletePost={handleDelete}
                   likePost={handleLikePost}
-                ></PostCard>
+                >
+                </PostCard>
+
               ))
             ) : (
               <div className="flex w-full h-full items-center justify-center">
@@ -278,10 +306,12 @@ export default function Home() {
                     <div className="flex gap-1">
                       <CustomButton
                         title='Accept'
+                        onClick={() => acceptRequest(_id, "Accepted")}
                         containerStyles='w-1/2 justify-center bg-[#0444a4] text-sm text-white px-1.5 py-1.5 rounded-2xl'
                       ></CustomButton>
                       <CustomButton
                         title='Delete'
+                        onClick={() => acceptRequest(_id, "Denied")}
                         containerStyles='w-1/2 justify-center border border-[#666] text-sm text-ascent-1 px-1.5 py-1.5 rounded-2xl'
                       ></CustomButton>
                     </div>
@@ -320,7 +350,7 @@ export default function Home() {
                       </Link>
 
                       <div className="flex gap-1">
-                        <button className="bg-[#0444a430] text-sm text-white p-1 rounded" onClick={() => { }}>
+                        <button className="bg-[#0444a430] text-sm text-white p-1 rounded" onClick={() => handleFriendRequest(friend?._id)}>
                           <BsPersonFillAdd size={20} className="text-[#0f52b6]"></BsPersonFillAdd>
                         </button>
                       </div>
