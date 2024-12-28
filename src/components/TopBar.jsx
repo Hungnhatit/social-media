@@ -9,6 +9,9 @@ import { PiCloudSunBold } from "react-icons/pi";
 import { IoNotifications } from "react-icons/io5";
 import { SetTheme } from "../redux/theme";
 import { UserLogout } from "../redux/userSlice";
+import { fetchPosts } from "../utils";
+import { useEffect, useRef, useState } from "react";
+import Dropdown from "./Dropdown.jsx";
 
 const TopBar = () => {
   const { theme } = useSelector((state) => state.theme);
@@ -28,14 +31,38 @@ const TopBar = () => {
   }
 
   const handleSearch = async (data) => {
-
+    await fetchPosts(user.token, dispatch, "", data);
   }
 
+  //-------------< User dropdown menu >-------------
+  const [isOpen, setIsOpen] = useState(false);
+  const dropDownRef = useRef(null);
+  const menuItems = [
+    { label: 'Profile', handleEvent: () => window.location.replace("/profile/" + user._id) },
+    { label: 'Log out', handleEvent: () => dispatch(UserLogout()) },
+  ];
 
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  }
+
+  const handleClickOutside = (e) => {
+    if (dropDownRef.current && !dropDownRef.current.contains(e.target)) {
+      setIsOpen(false);
+    }
+  }
+
+  // Listen mouse click event
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
-    <div className="topbar w-full flex items-center justify-between py-3 md:py-6 px-4 bg-primary">
-      <Link to='/' className='flex gap-2 items-center'>
+    <div className="topbar w-full flex items-center justify-between py-3 md:py-3 px-10 bg-primary">
+      <Link to='/' className='w-1/4 flex gap-2 items-center'>
         <div className="p-1 md:p-2 bg-[#065ad8] rounded text-white">
           <TbSocial></TbSocial>
         </div>
@@ -61,28 +88,36 @@ const TopBar = () => {
       </form>
 
       {/* Icons */}
-      <div className="flex gap-4 items-center text-ascent-1 text-sm md:text-xl ">
+      <div className="w-1/5 flex gap-10 items-center justify-end text-ascent-1 text-sm md:text-xl ">
         <button onClick={() => handleTheme()}>{theme ? <PiCloudSunBold /> : <FaRegMoon />}</button>
         <div className="hidden lg:flex">
           <IoNotifications></IoNotifications>
         </div>
-        <div className="hidden lg:flex">
+        {/* User - Dropdown menu */}
+        <div
+          ref={dropDownRef}
+          className="hidden lg:flex cursor-pointer relative transition ease-linear"
+          onClick={toggleDropdown}
+        >
           <FaUserAlt></FaUserAlt>
+          <Dropdown
+            isOpen={isOpen}
+            toggleDropdown={toggleDropdown}
+            menuItems={menuItems}
+            position="right-0 top-6"
+            handleEvent={menuItems.handleEvent}
+          ></Dropdown>
         </div>
+
       </div>
 
-      <div>
+      {/* <div>
         <CustomButton
           onClick={() => dispatch(UserLogout())}
           title='Log out'
           containerStyles='text-sm text-ascent-1 px-4 md:px-6 py-1 md:py-2 border border-[#666] rounded-full'
         ></CustomButton>
-      </div>
-
-
-
-
-
+      </div> */}
     </div>)
 }
 export default TopBar

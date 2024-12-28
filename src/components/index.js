@@ -1,4 +1,4 @@
-import React from "react";
+// import React from "react";
 import TextInput from "./TextInput";
 import Loading from "./Loading";
 import CustomButton from "./CustomButton";
@@ -7,6 +7,7 @@ import ProfileCard from "./ProfileCard";
 import FriendCard from "./FriendCard";
 import PostCard from "./PostCard";
 import EditProfile from "./EditProfile";
+import Dropdown from "./Dropdown";
 export {
   TextInput,
   Loading,
@@ -15,5 +16,6 @@ export {
   ProfileCard,
   FriendCard,
   PostCard,
-  EditProfile
+  EditProfile,
+  Dropdown
 }
