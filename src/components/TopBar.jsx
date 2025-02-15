@@ -61,7 +61,7 @@ const TopBar = () => {
   }, []);
 
   return (
-    <div className="topbar w-full flex items-center justify-between py-3 md:py-3 px-10 bg-primary">
+    <div className="z-1 topbar w-full flex items-center justify-between py-3 md:py-3 px-10 bg-primary">
       <Link to='/' className='w-1/4 flex gap-2 items-center'>
         <div className="p-1 md:p-2 bg-[#065ad8] rounded text-white">
           <TbSocial></TbSocial>

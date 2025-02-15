@@ -34,10 +34,6 @@ const FriendCard = ({ friends, user }) => {
             </Link>
           ))}
         </div>
-
-
-
-
       </div>
     </div>
   )

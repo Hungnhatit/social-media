@@ -3,22 +3,26 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { getPost } from '../../utils';
 import { IoClose } from 'react-icons/io5';
 import moment from 'moment';
+import { useModal } from '../../context/ModalContext';
 
-const PostDetail = ({ postId, closeModal }) => {
+const PostDetail = ({ postId }) => {
   // get post id from url
-  const { id } = useParams();
-  const [post, setPost] = useState(null);
-  const navigate = useNavigate();
-  const location = useLocation();
+  // const { id } = useParams();
+  // const [post, setPost] = useState(null);
+  // const navigate = useNavigate();
+  // const location = useLocation();
 
-  useEffect(() => {
-    const fetchPost = async () => {
-      const res = await getPost(id || postId);
-      setPost(res.data);
-    }
-    fetchPost();
-  }, [id]);
-  console.log(post)
+  // useEffect(() => {
+  //   const fetchPost = async () => {
+  //     const res = await getPost(id || postId);
+  //     setPost(res.data);
+  //   }
+  //   fetchPost();
+  // }, [id]);
+
+  const { isOpen, selectedPost, openModal, closeModal } = useModal();
+
+  console.log(isOpen)
 
   return (
     <div className='flex mx-auto min-h-screen items-center justify-center w-10/12'>
@@ -30,7 +34,7 @@ const PostDetail = ({ postId, closeModal }) => {
         <div className='flex'>
           <div className='w-1/3'>
             <img
-              src={post?.image}
+              src={selectedPost?.image}
               alt=""
               className='w-full' />
           </div>
@@ -39,16 +43,16 @@ const PostDetail = ({ postId, closeModal }) => {
           <div className='w-2/3 px-8 py-2'>
 
             <div className='flex mb-2'>
-              <img src={post?.userId?.profileUrl} alt="" className='w-10 h-10 mr-3' />
+              <img src={selectedPost?.userId?.profileUrl} alt="" className='w-10 h-10 mr-3' />
 
               <div className='flex flex-col'>
-                <p className='font-bold'>{post?.userId?.firstName} {post?.userId?.lastName}</p>
-                <span className='text-[13px]'>{moment(post?.createdAt ?? "2024-8-31").fromNow()}</span>
+                <p className='font-bold'>{selectedPost?.userId?.firstName} {selectedPost?.userId?.lastName}</p>
+                <span className='text-[13px]'>{moment(selectedPost?.createdAt ?? "2024-8-31").fromNow()}</span>
               </div>
             </div>
 
 
-            {post?.description}
+            {selectedPost?.description}
           </div>
         </div>
 

@@ -55,7 +55,6 @@ const EditProfile = () => {
       }
       setIsSubmitting(false);
 
-
     } catch (error) {
       console.log(error);
       setIsSubmitting(false);

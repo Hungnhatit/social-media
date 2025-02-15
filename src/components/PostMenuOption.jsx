@@ -1,6 +1,6 @@
 import { PiMinusCircleFill } from 'react-icons/pi';
 import { FaBookmark } from 'react-icons/fa';
-import { MdCancelPresentation, MdDelete, MdEdit } from 'react-icons/md';
+import { MdCancelPresentation, MdDelete, MdEdit, MdOutlineDeleteOutline } from 'react-icons/md';
 import { AiFillPlusCircle } from "react-icons/ai";
 import { useDispatch } from 'react-redux';
 import { EditPost } from '../redux/postSlice';
@@ -31,16 +31,29 @@ const PostMenuOption = ({ userId, postUserId }) => {
               {item.name}
             </li>
           ))}
-          {userId === postUserId &&
-            <li
-              className='flex items-center px-3 py-2 rounded-md hover:bg-[#F2F2F2]'
-              onClick={() => dispatch(EditPost(true))}
-            >
-              <span className='pr-2'>
-                <MdEdit size={20} />
-              </span>
-              Edit post
-            </li>
+          {userId === postUserId && (
+            <>
+              <li
+                className='flex items-center px-3 py-2 rounded-md hover:bg-[#F2F2F2]'
+                onClick={() => dispatch(EditPost(true))}>
+                <span className='pr-2'>
+                  <MdEdit size={20} />
+                </span>
+                Edit post
+              </li>
+
+              <li
+                className='flex items-center px-3 py-2 rounded-md hover:bg-[#F2F2F2]'
+                onClick={() => dispatch(EditPost(true))}>
+                <span className='pr-2'>
+                  <MdOutlineDeleteOutline size={20} />
+                </span>
+                Delete post
+              </li>
+            </>
+
+
+          )
 
           }
         </ul>
