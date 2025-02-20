@@ -8,6 +8,7 @@ const ModalWrapper = () => {
   if (!isOpen) return null;
 
   return (
+    // post detail modal
     <div className="fixed z-50 top-0 w-full h-full">
       <PostDetail postId={selectedPost} />
     </div>

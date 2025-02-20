@@ -18,6 +18,7 @@ import PostMenuOption from './PostMenuOption.jsx';
 import PostDetail from './post/PostDetail.jsx';
 import { useSelector } from 'react-redux';
 import { useModal } from '../context/ModalContext.jsx';
+import { FaHeart, FaRegHeart } from 'react-icons/fa';
 
 const getPostComments = async (id) => {
   try {
@@ -347,16 +348,12 @@ const PostCard = ({ post, user, deletePost, likePost }) => {
           <div className='mt-4 flex justify-between items-center px-3 py-2 text-ascent-2 text-base border-b border-[#66666645]'>
             {/* handle like post */}
             <div
-              className='flex items-center cursor-pointer'
-              onClick={() => handleLike("/posts/like/" + post?._id)}
-
-            >
-              {/* <BiSolidLike size={20} color="#0766FF" className='mr-2' />
-            <span>Liked</span> */}
+              className='flex gap-2 items-center cursor-pointer'
+              onClick={() => handleLike("/posts/like/" + post?._id)}>
               {post?.likes?.includes(user?._id) ? (
-                <BiSolidLike size={20} color='blue' />
+                <FaHeart size={20} color='red' />
               ) : (
-                <BiLike size={20} />
+                <FaRegHeart size={20} />
               )}
               {post?.likes?.length} Likes
 
@@ -367,8 +364,7 @@ const PostCard = ({ post, user, deletePost, likePost }) => {
               onClick={() => {
                 setShowComments(showComments === post._id ? null : post._id);
                 getComments(post?._id);
-              }}
-            >
+              }}>
               <GoCommentDiscussion size={20} />
               {post?.comments?.length} comments
             </p>
@@ -378,7 +374,7 @@ const PostCard = ({ post, user, deletePost, likePost }) => {
               <span>Share</span>
             </p>
 
-            {user?._id === post?.userId?._id && (
+            {/* {user?._id === post?.userId?._id && (
               <div
                 className='flex items-center cursor-pointer'
                 onClick={() => deletePost(post?._id)}
@@ -386,7 +382,8 @@ const PostCard = ({ post, user, deletePost, likePost }) => {
                 <MdOutlineDeleteOutline size={20} />
                 <span>Delete</span>
               </div>
-            )}
+            )} */}
+            
           </div>
         </div>
 
